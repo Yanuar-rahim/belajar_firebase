@@ -1,0 +1,1371 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Belajar Firebase dan Cloud Firestore</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "media",
+        theme: {
+          extend: {
+            fontFamily: {
+              display: [
+                '"Bricolage Grotesque"',
+                "ui-sans-serif",
+                "system-ui",
+                "sans-serif",
+              ],
+              sans: [
+                '"Instrument Sans"',
+                "ui-sans-serif",
+                "system-ui",
+                "sans-serif",
+              ],
+              mono: ['"JetBrains Mono"', "ui-monospace", "Menlo", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      :root {
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        @apply bg-slate-50 text-slate-800 font-sans antialiased dark:bg-slate-950 dark:text-slate-200;
+      }
+      .h2 {
+        @apply font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-5;
+      }
+      .h3 {
+        @apply font-display text-xl font-semibold text-slate-900 dark:text-white mt-8 mb-3;
+      }
+      .txt {
+        @apply leading-relaxed text-slate-700 dark:text-slate-300 mb-4 max-w-[68ch];
+      }
+      .list {
+        @apply list-disc pl-5 space-y-2 mb-4 max-w-[68ch] text-slate-700 dark:text-slate-300 marker:text-amber-500;
+      }
+      .steps {
+        @apply list-decimal pl-5 space-y-2 mb-4 max-w-[68ch] text-slate-700 dark:text-slate-300 marker:font-semibold marker:text-amber-600;
+      }
+      .note {
+        @apply rounded-lg border-l-4 border-amber-400 bg-amber-50 dark:bg-amber-400/10 px-4 py-3 mb-5 max-w-[68ch] text-slate-800 dark:text-slate-200;
+      }
+      .tblw {
+        @apply overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 mb-5;
+      }
+      .tblw table {
+        @apply w-full text-left text-sm;
+      }
+      .tblw th {
+        @apply bg-slate-100 dark:bg-slate-900 px-4 py-3 font-semibold text-slate-900 dark:text-white;
+      }
+      .tblw td {
+        @apply px-4 py-3 border-t border-slate-200 dark:border-slate-800 align-top;
+      }
+      .tblw td:first-child {
+        @apply font-medium whitespace-nowrap;
+      }
+      pre {
+        @apply bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto text-[13px] leading-6 font-mono mb-4;
+      }
+      code.i {
+        @apply font-mono text-[0.9em] bg-slate-200/70 dark:bg-slate-800 rounded px-1.5 py-0.5;
+      }
+      a.lnk {
+        @apply text-indigo-700 dark:text-indigo-300 underline underline-offset-2 break-all;
+      }
+      .navb {
+        @apply w-full flex items-center gap-3 text-left px-3 py-2 rounded-md text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800;
+      }
+      .navb[aria-current="true"] {
+        @apply bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-900 font-medium;
+      }
+      .btn {
+        @apply inline-flex items-center rounded-lg px-4 py-2.5 font-medium transition;
+      }
+      :focus-visible {
+        @apply outline outline-2 outline-offset-2 outline-indigo-500;
+      }
+      section[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      class="lg:hidden sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 px-4 py-3"
+    >
+      <button
+        id="menuBtn"
+        class="rounded-md border border-slate-300 dark:border-slate-700 px-3 py-1.5 text-sm"
+        aria-label="Buka daftar materi"
+        aria-expanded="false"
+      >
+        Materi
+      </button>
+      <span class="font-display font-bold">Belajar Firebase</span>
+    </header>
+
+    <div class="lg:grid lg:grid-cols-[290px_1fr] min-h-screen">
+      <aside
+        id="side"
+        class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 lg:w-auto -translate-x-full lg:translate-x-0 transition-transform bg-slate-100 dark:bg-slate-900 lg:bg-transparent lg:dark:bg-transparent border-r border-slate-200 dark:border-slate-800 overflow-y-auto p-4"
+        style="padding-top: max(1rem, env(safe-area-inset-top, 0px))"
+      >
+        <a
+          href="#home"
+          class="block font-display text-2xl font-extrabold text-slate-900 dark:text-white mb-1"
+          >Belajar Firebase</a
+        >
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Cloud Firestore dan Android Studio
+        </p>
+        <div class="mb-4">
+          <div
+            class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1"
+          >
+            <span>Progres belajar</span><span id="pTxt">0%</span>
+          </div>
+          <div
+            class="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"
+          >
+            <div id="pBar" class="h-full w-0 bg-amber-400 transition-all"></div>
+          </div>
+        </div>
+        <nav id="nav" class="space-y-0.5" aria-label="Daftar materi"></nav>
+      </aside>
+
+      <main class="px-5 sm:px-10 py-8 lg:py-14 max-w-4xl w-full">
+        <!-- HOME -->
+        <section id="home" data-title="Beranda">
+          <h1
+            class="font-display text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.05] mb-5"
+          >
+            Pengenalan Firebase
+          </h1>
+          <p class="txt text-lg">
+            Konsep dasar, Cloud Firestore, integrasi Android Studio, dan operasi
+            CRUD menggunakan Java.
+          </p>
+          <div class="note">
+            <strong>Tujuan pembelajaran.</strong> Memahami fungsi Firebase,
+            mengenal Cloud Firestore, memahami struktur database NoSQL, serta
+            mengetahui alur integrasi Firebase dengan aplikasi Android berbasis
+            Java.
+          </div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <button
+              class="btn bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-900 hover:opacity-90"
+              data-go="pengertian"
+            >
+              Mulai belajar
+            </button>
+            <button
+              class="btn border border-slate-300 dark:border-slate-700 hover:bg-slate-200/60 dark:hover:bg-slate-800"
+              data-go="latihan"
+            >
+              Langsung ke latihan
+            </button>
+          </div>
+        </section>
+
+        <!-- 1 -->
+        <section id="pengertian" data-title="Pengertian Firebase" hidden>
+          <h2 class="h2">Pengertian Firebase</h2>
+          <p class="txt">
+            Firebase adalah platform pengembangan aplikasi dari Google yang
+            menyediakan berbagai layanan backend (bagian belakang aplikasi) siap
+            pakai. Layanan ini membantu pengembang membangun aplikasi Android,
+            iOS, dan web tanpa harus menyiapkan seluruh server dan infrastruktur
+            backend sendiri dari awal.
+          </p>
+          <p class="txt">
+            Dengan Firebase, aplikasi dapat menyimpan data, mengelola akun
+            pengguna, mengirim notifikasi, menyimpan file, serta memantau
+            penggunaan aplikasi. Firebase menyediakan
+            <strong>SDK (Software Development Kit)</strong> agar aplikasi dapat
+            berkomunikasi dengan layanan tersebut.
+          </p>
+          <h3 class="h3">Contoh sederhana</h3>
+          <p class="txt">
+            Pada aplikasi Data Mahasiswa, data nama, NIM, dan program studi
+            dapat disimpan di Cloud Firestore. Perangkat lain dapat mengambil
+            data tersebut selama terhubung ke internet dan aturan akses database
+            mengizinkannya.
+          </p>
+        </section>
+
+        <!-- 2 -->
+        <section id="alasan" data-title="Mengapa Menggunakan Firebase?" hidden>
+          <h2 class="h2">Mengapa menggunakan Firebase?</h2>
+          <ul class="list">
+            <li>
+              Mempercepat pengembangan karena beberapa layanan backend sudah
+              disediakan.
+            </li>
+            <li>Mendukung penyimpanan data berbasis cloud.</li>
+            <li>Menyediakan SDK dan dokumentasi untuk berbagai platform.</li>
+            <li>
+              Mendukung sinkronisasi data, termasuk pembaruan real-time pada
+              layanan yang sesuai.
+            </li>
+            <li>
+              Menyediakan autentikasi dan aturan keamanan untuk mengatur akses
+              pengguna.
+            </li>
+            <li>
+              Dapat digunakan untuk proyek pembelajaran hingga aplikasi yang
+              lebih besar, dengan memperhatikan kuota dan biaya.
+            </li>
+          </ul>
+        </section>
+
+        <!-- 3 -->
+        <section id="layanan" data-title="Layanan Utama Firebase" hidden>
+          <h2 class="h2">Layanan utama Firebase</h2>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Layanan</th>
+                  <th>Fungsi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Firebase Authentication</td>
+                  <td>
+                    Mengelola identitas pengguna, misalnya registrasi dan login
+                    dengan email/password atau penyedia identitas lain.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cloud Firestore</td>
+                  <td>
+                    Database NoSQL berbasis dokumen untuk menyimpan, membaca,
+                    memperbarui, dan menghapus data aplikasi.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Realtime Database</td>
+                  <td>
+                    Database NoSQL berbasis JSON yang mendukung sinkronisasi
+                    data real-time.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cloud Storage for Firebase</td>
+                  <td>
+                    Menyimpan file seperti gambar, video, audio, dan dokumen.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Firebase Cloud Messaging (FCM)</td>
+                  <td>
+                    Mengirim pesan atau notifikasi ke aplikasi pada perangkat
+                    pengguna.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Google Analytics for Firebase</td>
+                  <td>
+                    Membantu memahami penggunaan aplikasi melalui data analitik
+                    dan aktivitas pengguna.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4 -->
+        <section id="firestore" data-title="Pengertian Cloud Firestore" hidden>
+          <h2 class="h2">Pengertian Cloud Firestore</h2>
+          <p class="txt">
+            Cloud Firestore adalah layanan database NoSQL berbasis cloud dari
+            Firebase. Firestore menyimpan data dalam bentuk
+            <strong>dokumen (document)</strong> yang dikelompokkan ke dalam
+            <strong>koleksi (collection)</strong>. Setiap dokumen berisi
+            pasangan field dan value, misalnya field
+            <code class="i">nama</code> bernilai “Yanuar”.
+          </p>
+          <p class="txt">
+            Disebut NoSQL karena Firestore tidak memakai model tabel-relasi
+            seperti database relasional pada umumnya. Dokumen dapat berisi
+            berbagai tipe data: string, angka, boolean, tanggal/waktu, array,
+            map, dan tipe lain yang didukung.
+          </p>
+          <h3 class="h3">Karakteristik</h3>
+          <ul class="list">
+            <li>
+              <strong>Berbasis cloud:</strong> data disimpan di infrastruktur
+              Google dan diakses lewat SDK atau API sesuai aturan akses.
+            </li>
+            <li>
+              <strong>Berorientasi dokumen:</strong> data disimpan dalam dokumen
+              yang memiliki field dan value.
+            </li>
+            <li>
+              <strong>Terorganisasi dalam koleksi:</strong> dokumen
+              dikelompokkan ke dalam collection.
+            </li>
+            <li>
+              Mendukung <strong>query</strong> untuk mencari atau menyaring
+              dokumen.
+            </li>
+            <li>
+              Mendukung <strong>listener real-time</strong> untuk menerima
+              pemberitahuan saat data yang didengarkan berubah.
+            </li>
+            <li>
+              Memiliki <strong>Security Rules</strong> untuk menentukan siapa
+              yang boleh membaca atau menulis data.
+            </li>
+          </ul>
+          <h3 class="h3">Contoh penggunaan</h3>
+          <p class="txt">
+            Pada aplikasi data mahasiswa, satu collection diberi nama
+            <code class="i">mahasiswa</code>. Di dalamnya ada satu dokumen untuk
+            setiap mahasiswa, berisi nama, NIM, dan program studi.
+          </p>
+          <pre>
+mahasiswa (collection)
+|
+|-- M001 (document)
+|   |-- nama: "Yanuar"
+|   |-- nim: "123456"
+|   |-- prodi: "Teknik Informatika"
+|
+|-- M002 (document)
+    |-- nama: "Andi"
+    |-- nim: "123457"
+    |-- prodi: "Sistem Informasi"</pre
+          >
+        </section>
+
+        <!-- 5 -->
+        <section
+          id="struktur"
+          data-title="Struktur Data Cloud Firestore"
+          hidden
+        >
+          <h2 class="h2">Struktur data Cloud Firestore</h2>
+          <p class="txt">Klik tiap lapisan untuk melihat artinya.</p>
+          <div id="layers" class="space-y-2 mb-6 max-w-xl"></div>
+          <div id="layerInfo" class="note" aria-live="polite">
+            Pilih salah satu lapisan di atas.
+          </div>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Komponen</th>
+                  <th>Pengertian</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Database</td>
+                  <td>
+                    Keseluruhan tempat penyimpanan data pada proyek Firebase.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Collection</td>
+                  <td>
+                    Kumpulan dokumen yang dikelompokkan berdasarkan jenis atau
+                    tujuan data. Contoh: <code class="i">mahasiswa</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Document</td>
+                  <td>
+                    Satu unit data di dalam collection. Contoh: dokumen dengan
+                    ID <code class="i">M001</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Field</td>
+                  <td>
+                    Nama atribut di dalam dokumen. Contoh:
+                    <code class="i">nama</code>, <code class="i">nim</code>,
+                    <code class="i">prodi</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Value</td>
+                  <td>
+                    Nilai yang dimiliki suatu field. Contoh: “Yanuar” atau
+                    “123456”.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="txt">
+            ID dokumen dapat ditentukan sendiri, seperti
+            <code class="i">M001</code>, atau dibuat otomatis oleh Firestore.
+            Pilih sesuai kebutuhan aplikasi dan pertimbangan keamanan.
+          </p>
+        </section>
+
+        <!-- 6 -->
+        <section
+          id="perbandingan"
+          data-title="Firestore dan Realtime Database"
+          hidden
+        >
+          <h2 class="h2">Firestore dan Realtime Database</h2>
+          <p class="txt">
+            Keduanya adalah database NoSQL dari Firebase, tetapi model data dan
+            karakteristiknya berbeda.
+          </p>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspek</th>
+                  <th>Cloud Firestore</th>
+                  <th>Realtime Database</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Struktur data</td>
+                  <td>Collection dan document</td>
+                  <td>Satu pohon JSON</td>
+                </tr>
+                <tr>
+                  <td>Query</td>
+                  <td>Query dokumen yang terstruktur</td>
+                  <td>Query dengan model dan kemampuan berbeda</td>
+                </tr>
+                <tr>
+                  <td>Sinkronisasi</td>
+                  <td>Mendukung listener real-time</td>
+                  <td>Dirancang untuk sinkronisasi real-time</td>
+                </tr>
+                <tr>
+                  <td>Cocok untuk</td>
+                  <td>Data terstruktur dalam dokumen dan kebutuhan query</td>
+                  <td>Data berbentuk pohon JSON dan sinkronisasi sederhana</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 7 -->
+        <section id="console" data-title="Firebase Console" hidden>
+          <h2 class="h2">Firebase Console</h2>
+          <p class="txt">
+            Firebase Console adalah antarmuka berbasis web untuk membuat dan
+            mengelola proyek Firebase. Di sini pengembang mengaktifkan layanan,
+            mendaftarkan aplikasi, melihat data Firestore, dan mengatur aturan
+            keamanan.
+          </p>
+          <p class="txt">
+            Alamat:
+            <a
+              class="lnk"
+              href="https://console.firebase.google.com/"
+              target="_blank"
+              rel="noopener"
+              >https://console.firebase.google.com/</a
+            >
+          </p>
+          <h3 class="h3">Membuat proyek</h3>
+          <ol class="steps">
+            <li>Buka Firebase Console dan masuk dengan akun Google.</li>
+            <li>Pilih <em>Add project</em> atau <em>Tambahkan proyek</em>.</li>
+            <li>Masukkan nama proyek dan ikuti petunjuk.</li>
+            <li>
+              Pilih layanan yang ingin digunakan, misalnya Cloud Firestore atau
+              Authentication.
+            </li>
+            <li>
+              Daftarkan aplikasi Android jika proyek akan dihubungkan dengan
+              Android Studio.
+            </li>
+          </ol>
+        </section>
+
+        <!-- 10 -->
+        <section id="crud" data-title="CRUD pada Cloud Firestore" hidden>
+          <h2 class="h2">CRUD pada Cloud Firestore</h2>
+          <p class="txt">
+            CRUD adalah singkatan dari
+            <strong>Create, Read, Update, Delete</strong>, empat operasi dasar
+            pengelolaan data pada aplikasi.
+          </p>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Operasi</th>
+                  <th>Arti</th>
+                  <th>Kegunaan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Create</td>
+                  <td>Membuat</td>
+                  <td>Menambahkan dokumen atau data baru.</td>
+                </tr>
+                <tr>
+                  <td>Read</td>
+                  <td>Membaca</td>
+                  <td>Mengambil dan menampilkan data.</td>
+                </tr>
+                <tr>
+                  <td>Update</td>
+                  <td>Memperbarui</td>
+                  <td>Mengubah field pada dokumen.</td>
+                </tr>
+                <tr>
+                  <td>Delete</td>
+                  <td>Menghapus</td>
+                  <td>Menghapus dokumen.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="txt">
+            Contoh berikut mengasumsikan Firebase sudah terhubung dan objek
+            <code class="i">db</code> sudah dibuat.
+          </p>
+          <div
+            role="tablist"
+            id="crudTabs"
+            class="flex flex-wrap gap-2 mb-3"
+          ></div>
+          <div id="crudPanel"></div>
+          <h3 class="h3">Perbandingan dengan database SQL</h3>
+          <p class="txt">
+            Database SQL (misalnya MySQL atau SQLite) menyimpan data dalam tabel
+            yang terdiri dari baris dan kolom. Cloud Firestore menyimpan data
+            dalam collection yang berisi dokumen. Konsepnya berpadanan seperti
+            berikut.
+          </p>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Database SQL</th>
+                  <th>Cloud Firestore</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Table</td>
+                  <td>Collection</td>
+                </tr>
+                <tr>
+                  <td>Row (baris)</td>
+                  <td>Document</td>
+                </tr>
+                <tr>
+                  <td>Column (kolom)</td>
+                  <td>Field</td>
+                </tr>
+                <tr>
+                  <td>Primary key</td>
+                  <td>Document ID</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="txt">
+            Berikut operasi CRUD yang sama pada data mahasiswa M001, ditulis
+            dalam SQL dan dalam Firestore (Java).
+          </p>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Operasi</th>
+                  <th>SQL</th>
+                  <th>Cloud Firestore (Java)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Create</td>
+                  <td>
+                    <code class="i"
+                      >INSERT INTO mahasiswa (id, nama, nim, prodi) VALUES
+                      ('M001', 'Yanuar', '123456', 'Teknik Informatika');</code
+                    >
+                  </td>
+                  <td>
+                    <code class="i"
+                      >db.collection("mahasiswa").document("M001").set(mahasiswa);</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Read</td>
+                  <td>
+                    <code class="i"
+                      >SELECT * FROM mahasiswa WHERE id = 'M001';</code
+                    >
+                  </td>
+                  <td>
+                    <code class="i"
+                      >db.collection("mahasiswa").document("M001").get();</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Update</td>
+                  <td>
+                    <code class="i"
+                      >UPDATE mahasiswa SET nama = 'Andi' WHERE id =
+                      'M001';</code
+                    >
+                  </td>
+                  <td>
+                    <code class="i"
+                      >db.collection("mahasiswa").document("M001").update("nama",
+                      "Andi");</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Delete</td>
+                  <td>
+                    <code class="i"
+                      >DELETE FROM mahasiswa WHERE id = 'M001';</code
+                    >
+                  </td>
+                  <td>
+                    <code class="i"
+                      >db.collection("mahasiswa").document("M001").delete();</code
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h3 class="h3">Perbedaan yang perlu diperhatikan</h3>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspek</th>
+                  <th>Database SQL</th>
+                  <th>Cloud Firestore</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Skema</td>
+                  <td>
+                    Kolom dan tipe data ditentukan lebih dulu saat tabel dibuat.
+                  </td>
+                  <td>
+                    Tidak ada tabel dengan kolom tetap. Setiap dokumen menyimpan
+                    field-nya sendiri.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cara menulis perintah</td>
+                  <td>Bahasa query SQL berupa teks.</td>
+                  <td>
+                    Pemanggilan method pada SDK, seperti
+                    <code class="i">set()</code>, <code class="i">get()</code>,
+                    <code class="i">update()</code>, dan
+                    <code class="i">delete()</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hasil operasi</td>
+                  <td>
+                    Hasil dikembalikan langsung oleh database yang dipanggil.
+                  </td>
+                  <td>
+                    Operasi dijalankan lewat jaringan, hasilnya diterima lewat
+                    listener berhasil atau gagal.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Data yang sudah ada</td>
+                  <td>
+                    <code class="i">INSERT</code> dengan primary key yang sama
+                    akan ditolak.
+                  </td>
+                  <td>
+                    <code class="i">set()</code> pada ID yang sama menimpa
+                    dokumen lama.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hak akses</td>
+                  <td>Diatur lewat pengguna dan hak akses database.</td>
+                  <td>Diatur lewat Firebase Security Rules.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">
+            Bagian perbandingan SQL ini tambahan di luar dokumen materi asli,
+            dan contoh SQL-nya bersifat umum (dapat sedikit berbeda antar produk
+            database).
+          </p>
+          <p class="note">
+            Potongan kode di atas adalah contoh inti. Sesuaikan import, nama
+            package, komponen tampilan, dan penanganan hasil dengan struktur
+            aplikasi Anda.
+          </p>
+        </section>
+
+        <!-- 11 -->
+        <section id="keamanan" data-title="Keamanan Database" hidden>
+          <h2 class="h2">Keamanan database dan Firebase Rules</h2>
+          <p class="txt">
+            Firebase Security Rules adalah aturan yang menentukan permintaan apa
+            saja yang boleh membaca atau menulis data. Aplikasi yang terhubung
+            ke Firebase tidak boleh otomatis diberi akses penuh ke seluruh
+            database.
+          </p>
+          <p class="txt">
+            Untuk aplikasi yang punya akun pengguna, aturan sebaiknya memeriksa
+            identitas pengguna dan membatasi akses sesuai kepemilikan atau
+            peran.
+          </p>
+          <div class="note">
+            <strong>Hindari</strong> aturan terbuka yang mengizinkan semua orang
+            membaca dan menulis data, terutama pada aplikasi yang dipakai secara
+            nyata.
+          </div>
+          <p class="txt">
+            Dokumentasi:
+            <a
+              class="lnk"
+              href="https://firebase.google.com/docs/firestore/security/get-started"
+              target="_blank"
+              rel="noopener"
+              >firebase.google.com/docs/firestore/security/get-started</a
+            >
+          </p>
+        </section>
+
+        <!-- 12 -->
+        <section id="paket" data-title="Spark Plan dan Blaze Plan" hidden>
+          <h2 class="h2">Firebase Spark Plan dan Blaze Plan</h2>
+          <div class="tblw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Paket</th>
+                  <th>Karakteristik umum</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Spark</td>
+                  <td>
+                    Paket tanpa biaya dengan kuota dan batas layanan tertentu.
+                  </td>
+                  <td>
+                    Cocok untuk belajar dan prototipe sesuai batas penggunaan.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Blaze</td>
+                  <td>
+                    Paket berbasis penggunaan, penagihan sesuai layanan dan
+                    pemakaian.
+                  </td>
+                  <td>Perlu memantau penggunaan dan konfigurasi penagihan.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="txt">
+            Kuota, fitur, dan harga dapat berubah. Periksa halaman resmi:
+            <a
+              class="lnk"
+              href="https://firebase.google.com/pricing"
+              target="_blank"
+              rel="noopener"
+              >firebase.google.com/pricing</a
+            >
+          </p>
+        </section>
+
+        <!-- 13 -->
+        <section id="penerapan" data-title="Contoh Penerapan" hidden>
+          <h2 class="h2">Contoh penerapan Firebase</h2>
+          <dl class="space-y-4 max-w-[68ch]">
+            <div>
+              <dt class="font-semibold text-slate-900 dark:text-white">
+                Aplikasi Data Mahasiswa
+              </dt>
+              <dd class="text-slate-700 dark:text-slate-300">
+                Menyimpan data mahasiswa, menampilkan daftar, dan mengelola
+                perubahan data dengan Firestore.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-slate-900 dark:text-white">
+                Aplikasi Absensi
+              </dt>
+              <dd class="text-slate-700 dark:text-slate-300">
+                Menyimpan identitas mahasiswa dan catatan kehadiran.
+                Authentication dapat mengelola identitas pengguna.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-slate-900 dark:text-white">
+                Aplikasi Chat
+              </dt>
+              <dd class="text-slate-700 dark:text-slate-300">
+                Menyimpan pesan dan memanfaatkan listener real-time untuk
+                memperbarui percakapan.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-slate-900 dark:text-white">
+                Aplikasi Pemesanan
+              </dt>
+              <dd class="text-slate-700 dark:text-slate-300">
+                Menyimpan data pelanggan, kamar atau produk, serta transaksi.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-slate-900 dark:text-white">
+                Aplikasi Informasi
+              </dt>
+              <dd class="text-slate-700 dark:text-slate-300">
+                Mengambil informasi dari database dan mengirim notifikasi
+                menggunakan layanan yang sesuai.
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <!-- 14 -->
+        <section id="rangkuman" data-title="Rangkuman" hidden>
+          <h2 class="h2">Rangkuman</h2>
+          <ul class="list">
+            <li>
+              Firebase adalah platform pengembangan aplikasi yang menyediakan
+              layanan backend dari Google.
+            </li>
+            <li>
+              Cloud Firestore adalah database NoSQL berbasis dokumen yang
+              memakai collection dan document.
+            </li>
+            <li>Dokumen berisi field dan value yang menyimpan informasi.</li>
+            <li>
+              Firebase Console dipakai untuk mengelola proyek dan layanan
+              Firebase.
+            </li>
+            <li>
+              Firebase SDK memungkinkan aplikasi Android berkomunikasi dengan
+              Firebase.
+            </li>
+            <li>CRUD terdiri dari Create, Read, Update, dan Delete.</li>
+            <li>
+              Firebase Security Rules harus dikonfigurasi agar akses database
+              sesuai kebutuhan aplikasi.
+            </li>
+          </ul>
+        </section>
+
+        <!-- 15 -->
+        <section id="latihan" data-title="Latihan dan Evaluasi" hidden>
+          <h2 class="h2">Latihan dan evaluasi</h2>
+          <p class="txt">
+            Pilih satu jawaban untuk tiap soal. Jawaban langsung diperiksa.
+          </p>
+          <div id="quiz" class="space-y-6 max-w-2xl"></div>
+          <div
+            id="score"
+            class="mt-6 flex flex-wrap items-center gap-4"
+            aria-live="polite"
+          ></div>
+        </section>
+
+        <!-- 16 -->
+        <section id="referensi" data-title="Referensi" hidden>
+          <h2 class="h2">Referensi</h2>
+          <ul class="space-y-3 max-w-[68ch]">
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/docs"
+                target="_blank"
+                rel="noopener"
+                >Firebase Documentation</a
+              >
+            </li>
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/docs/android/setup"
+                target="_blank"
+                rel="noopener"
+                >Firebase for Android</a
+              >
+            </li>
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/docs/firestore"
+                target="_blank"
+                rel="noopener"
+                >Cloud Firestore</a
+              >
+            </li>
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/docs/firestore/data-model"
+                target="_blank"
+                rel="noopener"
+                >Cloud Firestore Data Model</a
+              >
+            </li>
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/docs/firestore/security/get-started"
+                target="_blank"
+                rel="noopener"
+                >Firestore Security Rules</a
+              >
+            </li>
+            <li>
+              <a
+                class="lnk"
+                href="https://firebase.google.com/pricing"
+                target="_blank"
+                rel="noopener"
+                >Firebase Pricing</a
+              >
+            </li>
+          </ul>
+        </section>
+
+        <div
+          id="pager"
+          class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-between gap-3"
+        ></div>
+      </main>
+    </div>
+    <div
+      id="scrim"
+      class="fixed inset-0 z-30 bg-black/40 hidden lg:hidden"
+    ></div>
+
+    <script>
+      const secs = [...document.querySelectorAll("main section")];
+      const ids = secs.map((s) => s.id);
+      const nav = document.getElementById("nav");
+      const side = document.getElementById("side");
+      const scrim = document.getElementById("scrim");
+      let visited = new Set();
+      try {
+        visited = new Set(
+          JSON.parse(localStorage.getItem("fb-visited") || "[]"),
+        );
+      } catch (e) {}
+
+      // Navigasi samping
+      secs.slice(1).forEach((s, i) => {
+        const b = document.createElement("button");
+        b.className = "navb";
+        b.dataset.id = s.id;
+        b.innerHTML =
+          '<span class="w-5 text-xs tabular-nums opacity-70">' +
+          (i + 1) +
+          '</span><span class="flex-1">' +
+          s.dataset.title +
+          '</span><span class="tick text-emerald-500 text-xs"></span>';
+        b.onclick = () => go(s.id);
+        nav.appendChild(b);
+      });
+
+      function progress() {
+        const n = ids.slice(1).filter((id) => visited.has(id)).length;
+        const pct = Math.round((n / (ids.length - 1)) * 100);
+        document.getElementById("pBar").style.width = pct + "%";
+        document.getElementById("pTxt").textContent = pct + "%";
+        nav
+          .querySelectorAll(".navb")
+          .forEach(
+            (b) =>
+              (b.querySelector(".tick").textContent = visited.has(b.dataset.id)
+                ? "✓"
+                : ""),
+          );
+      }
+
+      function show(id) {
+        if (!ids.includes(id)) id = "home";
+        secs.forEach((s) => (s.hidden = s.id !== id));
+        nav
+          .querySelectorAll(".navb")
+          .forEach((b) => b.setAttribute("aria-current", b.dataset.id === id));
+        if (id !== "home") {
+          visited.add(id);
+          try {
+            localStorage.setItem("fb-visited", JSON.stringify([...visited]));
+          } catch (e) {}
+        }
+        progress();
+        const i = ids.indexOf(id),
+          p = document.getElementById("pager");
+        const prev = ids[i - 1],
+          next = ids[i + 1];
+        p.innerHTML =
+          (prev
+            ? '<button class="btn border border-slate-300 dark:border-slate-700 hover:bg-slate-200/60 dark:hover:bg-slate-800" data-go="' +
+              prev +
+              '">Sebelumnya</button>'
+            : "<span></span>") +
+          (next
+            ? '<button class="btn bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-900 hover:opacity-90" data-go="' +
+              next +
+              '">Berikutnya</button>'
+            : "<span></span>");
+        closeMenu();
+        window.scrollTo(0, 0);
+      }
+      function go(id) {
+        if (location.hash === "#" + id) show(id);
+        else location.hash = id;
+      }
+      window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+      document.addEventListener("click", (e) => {
+        const t = e.target.closest("[data-go]");
+        if (t) go(t.dataset.go);
+      });
+
+      // Menu mobile
+      const menuBtn = document.getElementById("menuBtn");
+      function closeMenu() {
+        side.classList.add("-translate-x-full");
+        scrim.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+      menuBtn.onclick = () => {
+        side.classList.remove("-translate-x-full");
+        scrim.classList.remove("hidden");
+        menuBtn.setAttribute("aria-expanded", "true");
+      };
+      scrim.onclick = closeMenu;
+
+      // Lapisan struktur Firestore
+      const layers = [
+        [
+          "Database",
+          "Tempat penyimpanan seluruh data pada proyek Firebase.",
+          "bg-slate-900 text-white dark:bg-slate-700",
+        ],
+        [
+          "Collection: mahasiswa",
+          "Kumpulan dokumen yang dikelompokkan berdasarkan jenis atau tujuan data.",
+          "bg-indigo-700 text-white",
+        ],
+        [
+          "Document: M001",
+          "Satu unit data di dalam collection, dengan ID M001 (dibuat sendiri atau otomatis).",
+          "bg-amber-400 text-slate-900",
+        ],
+        [
+          "Field dan value: nama = “Yanuar”",
+          "Field adalah nama atribut (nama, nim, prodi). Value adalah nilainya.",
+          "bg-emerald-600 text-white",
+        ],
+      ];
+      const L = document.getElementById("layers");
+      layers.forEach((l, i) => {
+        const b = document.createElement("button");
+        b.className =
+          "block w-full text-left rounded-lg px-4 py-3 font-medium " + l[2];
+        b.style.marginLeft = i * 18 + "px";
+        b.style.width = "calc(100% - " + i * 18 + "px)";
+        b.textContent = l[0];
+        b.onclick = () => {
+          document.getElementById("layerInfo").textContent =
+            l[0].split(":")[0] + ": " + l[1];
+        };
+        L.appendChild(b);
+      });
+
+      // Tab CRUD
+      const crud = {
+        Create: [
+          "Menambahkan data",
+          `import java.util.HashMap;
+import java.util.Map;
+
+Map&lt;String, Object&gt; mahasiswa = new HashMap&lt;&gt;();
+mahasiswa.put("nama", "Yanuar");
+mahasiswa.put("nim", "123456");
+mahasiswa.put("prodi", "Teknik Informatika");
+
+db.collection("mahasiswa")
+        .document("M001")
+        .set(mahasiswa)
+        .addOnSuccessListener(unused -&gt;
+                Log.d("FIRESTORE", "Data berhasil disimpan"))
+        .addOnFailureListener(e -&gt;
+                Log.e("FIRESTORE", "Gagal menyimpan data", e));`,
+          '<code class="i">collection("mahasiswa")</code> menunjuk collection mahasiswa. <code class="i">document("M001")</code> menentukan ID dokumen. <code class="i">set(mahasiswa)</code> mengirim data ke Firestore. Listener memberi tahu apakah operasi berhasil atau gagal.',
+        ],
+        Read: [
+          "Membaca data",
+          `db.collection("mahasiswa")
+        .document("M001")
+        .get()
+        .addOnSuccessListener(document -&gt; {
+            if (document.exists()) {
+                String nama = document.getString("nama");
+                String nim = document.getString("nim");
+
+                Log.d("FIRESTORE", "Nama: " + nama);
+                Log.d("FIRESTORE", "NIM: " + nim);
+            }
+        })
+        .addOnFailureListener(e -&gt;
+                Log.e("FIRESTORE", "Gagal membaca data", e));`,
+          '<code class="i">get()</code> meminta dokumen dengan ID M001. <code class="i">document.exists()</code> memeriksa apakah dokumen ditemukan. <code class="i">getString()</code> mengambil nilai field bertipe string.',
+        ],
+        Update: [
+          "Memperbarui data",
+          `db.collection("mahasiswa")
+        .document("M001")
+        .update("nama", "Andi")
+        .addOnSuccessListener(unused -&gt;
+                Log.d("FIRESTORE", "Data berhasil diperbarui"))
+        .addOnFailureListener(e -&gt;
+                Log.e("FIRESTORE", "Gagal memperbarui data", e));`,
+          '<code class="i">update()</code> mengubah field yang ditentukan pada dokumen yang sudah ada. Jika dokumen tidak ditemukan, operasi akan gagal.',
+        ],
+        Delete: [
+          "Menghapus data",
+          `db.collection("mahasiswa")
+        .document("M001")
+        .delete()
+        .addOnSuccessListener(unused -&gt;
+                Log.d("FIRESTORE", "Data berhasil dihapus"))
+        .addOnFailureListener(e -&gt;
+                Log.e("FIRESTORE", "Gagal menghapus data", e));`,
+          '<code class="i">delete()</code> menghapus dokumen dengan ID M001 dari collection mahasiswa.',
+        ],
+      };
+      const tabs = document.getElementById("crudTabs"),
+        panel = document.getElementById("crudPanel");
+      function crudShow(k) {
+        tabs.querySelectorAll("button").forEach((b) => {
+          const on = b.dataset.k === k;
+          b.setAttribute("aria-selected", on);
+          b.className =
+            "btn " +
+            (on
+              ? "bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-900"
+              : "border border-slate-300 dark:border-slate-700 hover:bg-slate-200/60 dark:hover:bg-slate-800");
+        });
+        const c = crud[k];
+        panel.innerHTML =
+          '<h3 class="h3 !mt-2">' +
+          k +
+          ": " +
+          c[0] +
+          "</h3><pre>" +
+          c[1] +
+          '</pre><p class="txt">' +
+          c[2] +
+          "</p>";
+      }
+      Object.keys(crud).forEach((k) => {
+        const b = document.createElement("button");
+        b.dataset.k = k;
+        b.setAttribute("role", "tab");
+        b.textContent = k;
+        b.onclick = () => crudShow(k);
+        tabs.appendChild(b);
+      });
+      crudShow("Create");
+
+      // Kuis
+      const Q = [
+        [
+          "Apa yang dimaksud dengan Firebase?",
+          [
+            "Bahasa pemrograman Android",
+            "Platform pengembangan aplikasi yang menyediakan layanan backend",
+            "Sistem operasi Android",
+            "Aplikasi desain",
+          ],
+          1,
+        ],
+        [
+          "Apa fungsi utama Cloud Firestore?",
+          [
+            "Mengedit gambar",
+            "Mengelola suara aplikasi",
+            "Menyimpan dan mengelola data aplikasi dalam dokumen",
+            "Membuat file APK",
+          ],
+          2,
+        ],
+        [
+          "Struktur utama Cloud Firestore terdiri atas ...",
+          [
+            "Table dan row saja",
+            "Collection dan document",
+            "Activity dan Fragment",
+            "Class dan method",
+          ],
+          1,
+        ],
+        [
+          "Apa yang dimaksud dengan field?",
+          [
+            "Atribut atau informasi di dalam dokumen",
+            "Nama proyek Android",
+            "Jenis koneksi internet",
+            "File konfigurasi Gradle",
+          ],
+          0,
+        ],
+        [
+          "Layanan Firebase yang digunakan untuk mengirim notifikasi ke aplikasi pada perangkat pengguna adalah ...",
+          [
+            "Firebase Authentication",
+            "Cloud Storage for Firebase",
+            "Realtime Database",
+            "Firebase Cloud Messaging (FCM)",
+          ],
+          3,
+        ],
+        [
+          "Operasi CRUD untuk memperbarui data disebut ...",
+          ["Create", "Read", "Update", "Delete"],
+          2,
+        ],
+        [
+          "Apa fungsi Firebase Security Rules?",
+          [
+            "Mengubah desain aplikasi",
+            "Mengatur izin baca dan tulis data",
+            "Mengunduh Android Studio",
+            "Mengganti package name",
+          ],
+          1,
+        ],
+      ];
+      const quiz = document.getElementById("quiz"),
+        scoreEl = document.getElementById("score");
+      let answered = {};
+      function renderQuiz() {
+        answered = {};
+        quiz.innerHTML = "";
+        Q.forEach((q, qi) => {
+          const f = document.createElement("fieldset");
+          f.innerHTML =
+            '<legend class="font-semibold text-slate-900 dark:text-white mb-3">' +
+            (qi + 1) +
+            ". " +
+            q[0] +
+            "</legend>";
+          q[1].forEach((o, oi) => {
+            const b = document.createElement("button");
+            b.className =
+              "opt block w-full text-left rounded-lg border border-slate-300 dark:border-slate-700 px-4 py-2.5 mb-2 hover:bg-slate-200/60 dark:hover:bg-slate-800";
+            b.textContent = "ABCD"[oi] + ". " + o;
+            b.onclick = () => {
+              if (answered[qi] !== undefined) return;
+              answered[qi] = oi;
+              f.querySelectorAll(".opt").forEach((x, xi) => {
+                x.classList.remove(
+                  "hover:bg-slate-200/60",
+                  "dark:hover:bg-slate-800",
+                );
+                if (xi === q[2])
+                  x.classList.add(
+                    "border-emerald-500",
+                    "bg-emerald-100",
+                    "dark:bg-emerald-500/20",
+                  );
+                else if (xi === oi)
+                  x.classList.add(
+                    "border-rose-500",
+                    "bg-rose-100",
+                    "dark:bg-rose-500/20",
+                  );
+              });
+              b.insertAdjacentHTML(
+                "beforeend",
+                oi === q[2]
+                  ? " <strong>(benar)</strong>"
+                  : " <strong>(kurang tepat)</strong>",
+              );
+              updScore();
+            };
+            f.appendChild(b);
+          });
+          quiz.appendChild(f);
+        });
+        updScore();
+      }
+      function updScore() {
+        const done = Object.keys(answered).length;
+        const ok = Object.entries(answered).filter(
+          ([qi, a]) => Q[qi][2] === a,
+        ).length;
+        scoreEl.innerHTML =
+          '<span class="font-display text-2xl font-bold text-slate-900 dark:text-white">Skor: ' +
+          ok +
+          " / " +
+          Q.length +
+          "</span>" +
+          (done === Q.length
+            ? '<span class="text-slate-600 dark:text-slate-400">' +
+              (ok === Q.length
+                ? "Sempurna. Semua jawaban benar."
+                : "Selesai. Baca ulang materi yang masih kurang tepat.") +
+              "</span>"
+            : '<span class="text-slate-500">' +
+              done +
+              " dari " +
+              Q.length +
+              " soal dijawab</span>") +
+          '<button id="resetQ" class="btn border border-slate-300 dark:border-slate-700 hover:bg-slate-200/60 dark:hover:bg-slate-800">Ulangi</button>';
+        document.getElementById("resetQ").onclick = renderQuiz;
+      }
+      renderQuiz();
+
+      show(location.hash.slice(1));
+    </script>
+  </body>
+</html>
