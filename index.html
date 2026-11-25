@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -24,19 +24,9 @@
         theme: {
           extend: {
             fontFamily: {
-              display: [
-                '"Bricolage Grotesque"',
-                "ui-sans-serif",
-                "system-ui",
-                "sans-serif",
-              ],
-              sans: [
-                '"Instrument Sans"',
-                "ui-sans-serif",
-                "system-ui",
-                "sans-serif",
-              ],
-              mono: ['"JetBrains Mono"', "ui-monospace", "Menlo", "monospace"],
+              display: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
+              sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
+              mono: ["ui-monospace", "Menlo", "Consolas", "monospace"],
             },
           },
         },
@@ -61,16 +51,16 @@
         @apply font-display text-xl font-semibold text-slate-900 dark:text-white mt-8 mb-3;
       }
       .txt {
-        @apply leading-relaxed text-slate-700 dark:text-slate-300 mb-4 max-w-[68ch];
+        @apply lg:text-[17px] leading-relaxed text-slate-700 dark:text-slate-300 mb-4;
       }
       .list {
-        @apply list-disc pl-5 space-y-2 mb-4 max-w-[68ch] text-slate-700 dark:text-slate-300 marker:text-amber-500;
+        @apply list-disc pl-5 space-y-2 mb-4 text-slate-700 dark:text-slate-300 marker:text-amber-500;
       }
       .steps {
-        @apply list-decimal pl-5 space-y-2 mb-4 max-w-[68ch] text-slate-700 dark:text-slate-300 marker:font-semibold marker:text-amber-600;
+        @apply list-decimal pl-5 space-y-2 mb-4 text-slate-700 dark:text-slate-300 marker:font-semibold marker:text-amber-600;
       }
       .note {
-        @apply rounded-lg border-l-4 border-amber-400 bg-amber-50 dark:bg-amber-400/10 px-4 py-3 mb-5 max-w-[68ch] text-slate-800 dark:text-slate-200;
+        @apply rounded-lg border-l-4 border-amber-400 bg-amber-50 dark:bg-amber-400/10 px-4 py-3 mb-5 text-slate-800 dark:text-slate-200;
       }
       .tblw {
         @apply overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 mb-5;
@@ -128,7 +118,7 @@
       <span class="font-display font-bold">Belajar Firebase</span>
     </header>
 
-    <div class="lg:grid lg:grid-cols-[290px_1fr] min-h-screen">
+    <div class="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] min-h-screen">
       <aside
         id="side"
         class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 lg:w-auto -translate-x-full lg:translate-x-0 transition-transform bg-slate-100 dark:bg-slate-900 lg:bg-transparent lg:dark:bg-transparent border-r border-slate-200 dark:border-slate-800 overflow-y-auto p-4"
@@ -157,8 +147,9 @@
         <nav id="nav" class="space-y-0.5" aria-label="Daftar materi"></nav>
       </aside>
 
-      <main class="px-5 sm:px-10 py-8 lg:py-14 max-w-4xl w-full">
-        <!-- HOME -->
+      <main
+        class="px-5 sm:px-10 lg:px-14 xl:px-20 py-8 lg:py-14 w-full min-w-0"
+      >
         <section id="home" data-title="Beranda">
           <h1
             class="font-display text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.05] mb-5"
@@ -188,7 +179,6 @@
           </div>
         </section>
 
-        <!-- 1 -->
         <section id="pengertian" data-title="Pengertian Firebase" hidden>
           <h2 class="h2">Pengertian Firebase</h2>
           <p class="txt">
@@ -214,7 +204,6 @@
           </p>
         </section>
 
-        <!-- 2 -->
         <section id="alasan" data-title="Mengapa Menggunakan Firebase?" hidden>
           <h2 class="h2">Mengapa menggunakan Firebase?</h2>
           <ul class="list">
@@ -239,7 +228,6 @@
           </ul>
         </section>
 
-        <!-- 3 -->
         <section id="layanan" data-title="Layanan Utama Firebase" hidden>
           <h2 class="h2">Layanan utama Firebase</h2>
           <div class="tblw">
@@ -297,7 +285,6 @@
           </div>
         </section>
 
-        <!-- 4 -->
         <section id="firestore" data-title="Pengertian Cloud Firestore" hidden>
           <h2 class="h2">Pengertian Cloud Firestore</h2>
           <p class="txt">
@@ -362,7 +349,6 @@ mahasiswa (collection)
           >
         </section>
 
-        <!-- 5 -->
         <section
           id="struktur"
           data-title="Struktur Data Cloud Firestore"
@@ -428,7 +414,6 @@ mahasiswa (collection)
           </p>
         </section>
 
-        <!-- 6 -->
         <section
           id="perbandingan"
           data-title="Firestore dan Realtime Database"
@@ -474,7 +459,6 @@ mahasiswa (collection)
           </div>
         </section>
 
-        <!-- 7 -->
         <section id="console" data-title="Firebase Console" hidden>
           <h2 class="h2">Firebase Console</h2>
           <p class="txt">
@@ -509,7 +493,6 @@ mahasiswa (collection)
           </ol>
         </section>
 
-        <!-- 10 -->
         <section id="crud" data-title="CRUD pada Cloud Firestore" hidden>
           <h2 class="h2">CRUD pada Cloud Firestore</h2>
           <p class="txt">
@@ -739,7 +722,6 @@ mahasiswa (collection)
           </p>
         </section>
 
-        <!-- 11 -->
         <section id="keamanan" data-title="Keamanan Database" hidden>
           <h2 class="h2">Keamanan database dan Firebase Rules</h2>
           <p class="txt">
@@ -770,7 +752,6 @@ mahasiswa (collection)
           </p>
         </section>
 
-        <!-- 12 -->
         <section id="paket" data-title="Spark Plan dan Blaze Plan" hidden>
           <h2 class="h2">Firebase Spark Plan dan Blaze Plan</h2>
           <div class="tblw">
@@ -815,10 +796,9 @@ mahasiswa (collection)
           </p>
         </section>
 
-        <!-- 13 -->
         <section id="penerapan" data-title="Contoh Penerapan" hidden>
           <h2 class="h2">Contoh penerapan Firebase</h2>
-          <dl class="space-y-4 max-w-[68ch]">
+          <dl class="space-y-4">
             <div>
               <dt class="font-semibold text-slate-900 dark:text-white">
                 Aplikasi Data Mahasiswa
@@ -866,7 +846,6 @@ mahasiswa (collection)
           </dl>
         </section>
 
-        <!-- 14 -->
         <section id="rangkuman" data-title="Rangkuman" hidden>
           <h2 class="h2">Rangkuman</h2>
           <ul class="list">
@@ -895,13 +874,12 @@ mahasiswa (collection)
           </ul>
         </section>
 
-        <!-- 15 -->
         <section id="latihan" data-title="Latihan dan Evaluasi" hidden>
           <h2 class="h2">Latihan dan evaluasi</h2>
           <p class="txt">
             Pilih satu jawaban untuk tiap soal. Jawaban langsung diperiksa.
           </p>
-          <div id="quiz" class="space-y-6 max-w-2xl"></div>
+          <div id="quiz" class="space-y-6"></div>
           <div
             id="score"
             class="mt-6 flex flex-wrap items-center gap-4"
@@ -909,10 +887,9 @@ mahasiswa (collection)
           ></div>
         </section>
 
-        <!-- 16 -->
         <section id="referensi" data-title="Referensi" hidden>
           <h2 class="h2">Referensi</h2>
-          <ul class="space-y-3 max-w-[68ch]">
+          <ul class="space-y-3">
             <li>
               <a
                 class="lnk"
@@ -994,7 +971,6 @@ mahasiswa (collection)
         );
       } catch (e) {}
 
-      // Navigasi samping
       secs.slice(1).forEach((s, i) => {
         const b = document.createElement("button");
         b.className = "navb";
@@ -1065,7 +1041,6 @@ mahasiswa (collection)
         if (t) go(t.dataset.go);
       });
 
-      // Menu mobile
       const menuBtn = document.getElementById("menuBtn");
       function closeMenu() {
         side.classList.add("-translate-x-full");
@@ -1079,7 +1054,6 @@ mahasiswa (collection)
       };
       scrim.onclick = closeMenu;
 
-      // Lapisan struktur Firestore
       const layers = [
         [
           "Database",
@@ -1117,7 +1091,6 @@ mahasiswa (collection)
         L.appendChild(b);
       });
 
-      // Tab CRUD
       const crud = {
         Create: [
           "Menambahkan data",
@@ -1213,7 +1186,6 @@ db.collection("mahasiswa")
       });
       crudShow("Create");
 
-      // Kuis
       const Q = [
         [
           "Apa yang dimaksud dengan Firebase?",
